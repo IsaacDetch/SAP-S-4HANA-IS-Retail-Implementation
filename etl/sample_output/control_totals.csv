@@ -1,0 +1,13 @@
+control_total,value
+site.rows,7.0
+supplier.rows,3.0
+article.rows,13.0
+sales_price.rows,9.0
+inventory_balance.rows,54.0
+gl_balance.rows,13.0
+article.generic,4.0
+article.variant,9.0
+inventory_balance.qty,1440.0
+inventory_balance.value,15520.0
+sales_price.sum,259.83
+gl_balance.debit,347720.0

@@ -1,0 +1,58 @@
+# Value mappings and defaults used by the transform layer (silver -> gold).
+# Owned by the data migration lead; changes go through the same review as configuration.
+company_code: US10
+sales_org: R100
+distribution_channel_store: "10"
+distribution_channel_online: "20"
+purchasing_org: R100
+currency: USD
+valid_to: "9999-12-31"
+
+# Legacy store type -> SAP site category (T001W-VLFKZ: A = store, B = distribution center) and site profile
+site_type:
+  STORE: {vlfkz: A, profile: Z_STORE}
+  DC: {vlfkz: B, profile: Z_DC}
+  WEB: {vlfkz: A, profile: Z_WEB}
+
+# Legacy department/class -> SAP merchandise category (MATKL)
+merchandise_category:
+  "10-100": "11010"   # Apparel / Tops & Tees
+  "10-110": "11020"   # Apparel / Denim
+  "10-120": "12010"   # Apparel / Shirts
+  "20-200": "21010"   # Home / Cookware
+
+# Variant-creating characteristics (class type 026)
+characteristics: [COLOR, SIZE]
+article_type: HAWA
+base_uom: EA
+
+# Country -> vendor reconciliation account (chart of accounts US10)
+vendor_recon_account:
+  US: "21100000"
+  default: "21100100"
+vendor_bp_grouping: Y101
+payment_terms_default: "0001"
+
+# Retail price-point rule: prices must end in .99 or .00 (warning only)
+price_point_endings: [".99", ".00"]
+
+# Legacy G/L account -> S/4HANA account (chart of accounts in finance/chart_of_accounts.csv)
+gl_account:
+  "1000": "11001000"   # Cash at bank
+  "1010": "11009800"   # Store change funds
+  "1300": "12600100"   # Rebates receivable
+  "1400": "13400000"   # Merchandise inventory
+  "1500": "16400000"   # Store fixtures
+  "1510": "17400000"   # Acc. depreciation fixtures
+  "2000": "21100000"   # Accounts payable
+  "2100": "21300000"   # Accrued expenses
+  "2200": "22000000"   # Sales tax payable
+  "2300": "21500000"   # Gift card liability
+  "3000": "31000000"   # Common stock
+  "3100": "32000000"   # Retained earnings
+
+# Legacy store / cost center -> profit center
+profit_center:
+  DC01: "1100"
+  WEB1: "3100"
+  store_prefix: "21"   # ST01 -> 2101

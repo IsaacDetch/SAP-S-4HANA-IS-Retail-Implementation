@@ -1,0 +1,25 @@
+{
+  "name": "ls_s4_odata",
+  "properties": {
+    "type": "OData",
+    "description": "S/4HANA OData / CDS services for post-load reconciliation extracts",
+    "typeProperties": {
+      "url": "https://@{linkedService().s4Host}/sap/opu/odata/sap/",
+      "authenticationType": "Basic",
+      "userName": "MIG_RECON",
+      "password": {
+        "type": "AzureKeyVaultSecret",
+        "store": {
+          "type": "LinkedServiceReference",
+          "referenceName": "ls_keyvault"
+        },
+        "secretName": "s4-recon-password"
+      }
+    },
+    "parameters": {
+      "s4Host": {
+        "type": "String"
+      }
+    }
+  }
+}

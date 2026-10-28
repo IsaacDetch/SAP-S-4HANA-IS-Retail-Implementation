@@ -1,0 +1,17 @@
+{
+  "name": "ls_sql_control",
+  "properties": {
+    "type": "AzureSqlDatabase",
+    "description": "Migration control DB: object catalogue, mappings, run log, DQ & reconciliation",
+    "typeProperties": {
+      "connectionString": {
+        "type": "AzureKeyVaultSecret",
+        "store": {
+          "type": "LinkedServiceReference",
+          "referenceName": "ls_keyvault"
+        },
+        "secretName": "sql-control-connection"
+      }
+    }
+  }
+}

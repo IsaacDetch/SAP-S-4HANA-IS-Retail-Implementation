@@ -1,0 +1,11 @@
+{
+  "name": "ds_legacy_sql_query",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "ls_legacy_sqlserver",
+      "type": "LinkedServiceReference"
+    },
+    "type": "SqlServerTable",
+    "typeProperties": {}
+  }
+}

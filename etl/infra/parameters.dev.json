@@ -1,0 +1,10 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "env": { "value": "dev" },
+    "location": { "value": "westus2" },
+    "adminGroupObjectId": { "value": "<ENTRA_GROUP_OBJECT_ID>" },
+    "adminGroupName": { "value": "grp-retail-migration-admins" }
+  }
+}

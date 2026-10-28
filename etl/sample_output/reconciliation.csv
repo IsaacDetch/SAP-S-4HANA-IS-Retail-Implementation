@@ -1,0 +1,6 @@
+object,check,expected,actual,difference,status
+site,source rows = gold + rejected,7.0,7.0,0.0,PASS
+supplier,source rows = gold + rejected,5.0,5.0,0.0,PASS
+article,source variants = gold variants + rejected,13.0,13.0,0.0,PASS
+inventory_balance,stock value (561) = legacy G/L inventory,15520.0,15520.0,0.0,PASS
+gl_balance,migration clearing 39990000 nets to zero,0.0,0.0,0.0,PASS

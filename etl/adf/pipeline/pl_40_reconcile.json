@@ -1,0 +1,111 @@
+{
+  "name": "pl_40_reconcile",
+  "properties": {
+    "description": "After the Migration Cockpit transfer: extract control totals from S/4HANA (OData/CDS) and compare with gold.",
+    "parameters": {
+      "run_id": {
+        "type": "String"
+      }
+    },
+    "activities": [
+      {
+        "name": "Extract S/4 control totals",
+        "type": "Copy",
+        "inputs": [
+          {
+            "referenceName": "ds_s4_odata",
+            "type": "DatasetReference",
+            "parameters": {
+              "path": "ZMIG_RECON_SRV/ControlTotals"
+            }
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "ds_adls_parquet",
+            "type": "DatasetReference",
+            "parameters": {
+              "container": "bronze",
+              "folder": {
+                "value": "@concat('s4_extract/run_id=', pipeline().parameters.run_id)",
+                "type": "Expression"
+              }
+            }
+          }
+        ],
+        "typeProperties": {
+          "source": {
+            "type": "ODataSource"
+          },
+          "sink": {
+            "type": "ParquetSink"
+          }
+        }
+      },
+      {
+        "name": "Reconcile target",
+        "type": "DatabricksNotebook",
+        "dependsOn": [
+          {
+            "activity": "Extract S/4 control totals",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.04:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 120
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_databricks",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "notebookPath": "/Shared/migration/04_reconcile_target",
+          "baseParameters": {
+            "run_id": "@pipeline().parameters.run_id"
+          }
+        }
+      },
+      {
+        "name": "log_reconcile",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Reconcile target",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "linkedServiceName": {
+          "referenceName": "ls_sql_control",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "storedProcedureName": "etl.usp_log_step",
+          "storedProcedureParameters": {
+            "run_id": {
+              "value": "@pipeline().parameters.run_id",
+              "type": "String"
+            },
+            "step": {
+              "value": "log_reconcile",
+              "type": "String"
+            },
+            "status": {
+              "value": "RECONCILED",
+              "type": "String"
+            },
+            "pipeline_run": {
+              "value": "@pipeline().RunId",
+              "type": "String"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

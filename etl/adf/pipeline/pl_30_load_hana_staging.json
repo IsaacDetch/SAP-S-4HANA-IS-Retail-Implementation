@@ -1,0 +1,107 @@
+{
+  "name": "pl_30_load_hana_staging",
+  "properties": {
+    "description": "Load gold objects into the SAP Migration Cockpit staging tables in SAP HANA, in migration sequence.",
+    "parameters": {
+      "run_id": {
+        "type": "String"
+      }
+    },
+    "activities": [
+      {
+        "name": "Lookup load order",
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "SELECT gold_object FROM etl.migration_object WHERE enabled = 1 AND gold_object IS NOT NULL ORDER BY load_order"
+          },
+          "dataset": {
+            "referenceName": "ds_sql_control",
+            "type": "DatasetReference"
+          },
+          "firstRowOnly": false
+        }
+      },
+      {
+        "name": "Load each object",
+        "type": "ForEach",
+        "dependsOn": [
+          {
+            "activity": "Lookup load order",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Lookup load order').output.value",
+            "type": "Expression"
+          },
+          "isSequential": true,
+          "activities": [
+            {
+              "name": "Gold to HANA staging",
+              "type": "DatabricksNotebook",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.04:00:00",
+                "retry": 1,
+                "retryIntervalInSeconds": 120
+              },
+              "linkedServiceName": {
+                "referenceName": "ls_databricks",
+                "type": "LinkedServiceReference"
+              },
+              "typeProperties": {
+                "notebookPath": "/Shared/migration/03_load_hana_staging",
+                "baseParameters": {
+                  "object": "@item().gold_object",
+                  "run_id": "@pipeline().parameters.run_id"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "log_staging",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Load each object",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "linkedServiceName": {
+          "referenceName": "ls_sql_control",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "storedProcedureName": "etl.usp_log_step",
+          "storedProcedureParameters": {
+            "run_id": {
+              "value": "@pipeline().parameters.run_id",
+              "type": "String"
+            },
+            "step": {
+              "value": "log_staging",
+              "type": "String"
+            },
+            "status": {
+              "value": "STAGED",
+              "type": "String"
+            },
+            "pipeline_run": {
+              "value": "@pipeline().RunId",
+              "type": "String"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

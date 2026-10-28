@@ -1,0 +1,22 @@
+area,key,business_event,debit,credit
+MM (OBYC),BSX,Inventory posting – all merchandise movements (valuation class 3100),13400000,13400000
+MM (OBYC),WRX,GR/IR clearing – vendor goods receipt vs invoice,21200000,21200000
+MM (OBYC),PRD,Price differences when stock is insufficient to absorb invoice variance,50200000,50200000
+MM (OBYC),GBB-VAX,POS sale / delivery goods issue (mvt 251 / 601) – cost of goods sold,50000000,
+MM (OBYC),GBB-INV,Physical inventory differences (mvt 701 / 702),52300000,52300000
+MM (OBYC),GBB-VNG,Scrapping damaged merchandise (mvt 551),52400000,
+MM (OBYC),GBB-VBR,Store supplies consumed to cost center,63100000,
+MM (OBYC),GBB-BSA,Initial stock entry at migration (mvt 561),13400000 (via BSX),39990000
+MM (OBYC),FR1 / FR3,Freight and duty clearing (planned delivery costs),21200100,21200100
+SD (VKOA),ERL,POS and online revenue by account assignment group,,41000000 / 41000100
+SD (VKOA),ERS,Sales deductions – discounts and coupons,41200000,
+Tax,MWS,Output sales tax by jurisdiction,,22000000
+POS inbound,Tender – cash,Store cash takings,11009400,
+POS inbound,Tender – card,Card takings (acquirer),11009500,
+POS inbound,Tender – gift card redemption,Gift card used as tender,21500000,
+POS inbound,Return (mvt 252),Customer return – revenue and stock reversed,41100000 / 13400000,11009400 / 50000000
+Bank (OT83),Store deposit,Cash deposited at bank,11001000,11009400
+Bank (OT83),Acquirer settlement,Card settlement net of fees,11001000 / 63600000,11009500
+Settlement Mgmt,Condition contract accrual,Vendor rebate accrual per invoice,12600100,52500000
+Settlement Mgmt,Condition contract settlement,Rebate settled to vendor (credit memo),21100000,12600100
+Asset Accounting (AO90),Acquisition / depreciation,Store fit-out and POS hardware,16300000-16500000 / 64000000-64100000,21100000 / 17300000-17500000

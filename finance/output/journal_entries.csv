@@ -1,0 +1,41 @@
+entry,phase,transaction,doc_type,text,account,account_name,debit,credit,assignment
+0,Opening,Migration Cockpit – G/L balances,SA,Opening capital,11001000,Bank 1 – Main Account,100000,,
+0,Opening,Migration Cockpit – G/L balances,SA,Opening capital,31000000,Share Capital,,100000,
+R1,Buy,WRP1R / ME21N,—,Replenishment proposal and PO: 1000 x TS-100 (variants S/M/L) @ 8 for DC01 – no posting,,,,,
+R2,Buy,MIGO 101 / EWM inbound,WE,Goods receipt at DC01 (moving average price),13400000,Inventory – Merchandise (trading goods),8000,,BSX · site DC01 · PC 1100
+R2,Buy,MIGO 101 / EWM inbound,WE,Goods receipt at DC01 (moving average price),21200000,GR/IR Clearing – Merchandise,,8000,WRX
+R3,Buy,MIRO,RE,Vendor invoice,21200000,GR/IR Clearing – Merchandise,8000,,WRX
+R3,Buy,MIRO,RE,Vendor invoice,21100000,Trade Payables – Domestic,,8000,Vendor 1000700
+R4,Buy,Condition contract accrual,SA,Vendor rebate accrual 3% of invoiced value,12600100,Vendor Rebate Receivable (condition contract accruals),240,,Condition contract CC-0001
+R4,Buy,Condition contract accrual,SA,Vendor rebate accrual 3% of invoiced value,52500000,Vendor Rebate Income (COGS reduction),,240,COGS reduction
+R5,Buy,F110,ZP,Vendor payment,21100000,Trade Payables – Domestic,8000,,
+R5,Buy,F110,ZP,Vendor payment,11001000,Bank 1 – Main Account,,8000,
+D1,Move,STO · VL10B · VL02N (mvt 641),WL,Stock transport DC01 -> ST01: 600 units,13400000,Inventory – Merchandise (trading goods),4800,,Site ST01 · PC 2101
+D1,Move,STO · VL10B · VL02N (mvt 641),WL,Stock transport DC01 -> ST01: 600 units,13400000,Inventory – Merchandise (trading goods),,4800,Site DC01 · PC 1100
+D2,Move,"Store GR (Fiori, mvt 101)",—,Goods receipt in store from stock in transit – value already moved at goods issue,,,,,
+S1,Sell,POS inbound WPUUMS (mvt 251),WA,ST01 daily sales: 300 @ 20 + 200 @ 15 (PR-FALL),50000000,COGS – Merchandise (stores),4000,,GBB-VAX · ST01
+S1,Sell,POS inbound WPUUMS (mvt 251),WA,ST01 daily sales: 300 @ 20 + 200 @ 15 (PR-FALL),13400000,Inventory – Merchandise (trading goods),,4000,BSX · ST01
+S2,Sell,POS inbound WPUUMS / WPUTAB,RV,"Revenue, sales tax and tenders",11009400,Store Cash in Transit,3240,,Tender: cash
+S2,Sell,POS inbound WPUUMS / WPUTAB,RV,"Revenue, sales tax and tenders",11009500,Payment Card Clearing (acquirer),6480,,Tender: card
+S2,Sell,POS inbound WPUUMS / WPUTAB,RV,"Revenue, sales tax and tenders",41000000,Revenue – Merchandise Sales (stores),,9000,VKOA ERL · ST01
+S2,Sell,POS inbound WPUUMS / WPUTAB,RV,"Revenue, sales tax and tenders",22000000,Sales Tax Payable,,720,MWS
+S3,Sell,POS inbound return (mvt 252),RV,Customer returns 10 units @ 20,41100000,Sales Returns (contra revenue),200,,Sales returns
+S3,Sell,POS inbound return (mvt 252),RV,Customer returns 10 units @ 20,22000000,Sales Tax Payable,16,,
+S3,Sell,POS inbound return (mvt 252),RV,Customer returns 10 units @ 20,11009400,Store Cash in Transit,,216,Cash refund
+S3,Sell,POS inbound return (mvt 252),RV,Customer returns 10 units @ 20,13400000,Inventory – Merchandise (trading goods),80,,Mvt 252 · ST01
+S3,Sell,POS inbound return (mvt 252),RV,Customer returns 10 units @ 20,50000000,COGS – Merchandise (stores),,80,
+S4,Sell,FEBAN – store deposit,ZB,Store cash deposited at bank,11001000,Bank 1 – Main Account,3024,,
+S4,Sell,FEBAN – store deposit,ZB,Store cash deposited at bank,11009400,Store Cash in Transit,,3024,
+S5,Sell,FEBAN – acquirer settlement,ZB,Card settlement net of 2.5% fee,11001000,Bank 1 – Main Account,6318,,
+S5,Sell,FEBAN – acquirer settlement,ZB,Card settlement net of 2.5% fee,63600000,Bank & Payment Card Fees,162,,CC store ST01
+S5,Sell,FEBAN – acquirer settlement,ZB,Card settlement net of 2.5% fee,11009500,Payment Card Clearing (acquirer),,6480,
+S6,Count,Store physical inventory (mvt 702),WI,Shrinkage 5 units,52300000,Inventory Differences / Shrinkage,40,,GBB-INV · ST01
+S6,Count,Store physical inventory (mvt 702),WI,Shrinkage 5 units,13400000,Inventory – Merchandise (trading goods),,40,ST01
+O1,Operate,Payroll posting,Y2,Store payroll,61000000,Salaries & Wages – Stores,1500,,CC store ST01
+O1,Operate,Payroll posting,Y2,Store payroll,21400000,Payroll Clearing,,1500,
+O2,Operate,Bank transfer,ZP,Net pay,21400000,Payroll Clearing,1500,,
+O2,Operate,Bank transfer,ZP,Net pay,11001000,Bank 1 – Main Account,,1500,
+O3,Operate,FB60,KR,Store rent invoice (open),62000000,Rent & Occupancy – Stores (variable & short-term),1200,,CC store ST01
+O3,Operate,FB60,KR,Store rent invoice (open),21150000,Payables – Landlords,,1200,Landlord 1000800
+C1,Close,FB50,SA,Income tax provision 25%,79000000,Income Tax Expense – Current,554,,"25% x 2,218"
+C1,Close,FB50,SA,Income tax provision 25%,22200000,Income Tax Payable,,554,

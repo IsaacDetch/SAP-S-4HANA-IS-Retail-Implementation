@@ -1,0 +1,16 @@
+{
+  "name": "ls_adls",
+  "properties": {
+    "type": "AzureBlobFS",
+    "description": "Data lake \u2013 bronze / silver / gold (managed identity)",
+    "typeProperties": {
+      "url": "https://@{linkedService().storageAccount}.dfs.core.windows.net"
+    },
+    "parameters": {
+      "storageAccount": {
+        "type": "String",
+        "defaultValue": "stretailmigdev"
+      }
+    }
+  }
+}

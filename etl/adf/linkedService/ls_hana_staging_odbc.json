@@ -1,0 +1,31 @@
+{
+  "name": "ls_hana_staging_odbc",
+  "properties": {
+    "type": "Odbc",
+    "connectVia": {
+      "referenceName": "shir-onprem",
+      "type": "IntegrationRuntimeReference"
+    },
+    "description": "Alternative load route: SAP HANA staging schema via ODBC sink on the self-hosted IR (HANA client installed)",
+    "typeProperties": {
+      "connectionString": {
+        "type": "AzureKeyVaultSecret",
+        "store": {
+          "type": "LinkedServiceReference",
+          "referenceName": "ls_keyvault"
+        },
+        "secretName": "hana-staging-odbc"
+      },
+      "authenticationType": "Basic",
+      "userName": "MIG_LOADER",
+      "password": {
+        "type": "AzureKeyVaultSecret",
+        "store": {
+          "type": "LinkedServiceReference",
+          "referenceName": "ls_keyvault"
+        },
+        "secretName": "hana-staging-password"
+      }
+    }
+  }
+}

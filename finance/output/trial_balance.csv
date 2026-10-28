@@ -1,0 +1,18 @@
+account,description,fsv_node,debit,credit
+11001000,Bank 1 – Main Account,1.1.1,99842,
+12600100,Vendor Rebate Receivable (condition contract accruals),1.1.4,240,
+13400000,Inventory – Merchandise (trading goods),1.1.5,4040,
+21150000,Payables – Landlords,2.1.1,,1200
+22000000,Sales Tax Payable,2.1.7,,704
+22200000,Income Tax Payable,2.1.7,,554
+31000000,Share Capital,3.1,,100000
+41000000,Revenue – Merchandise Sales (stores),4.1.1,,9000
+41100000,Sales Returns (contra revenue),4.1.2,200,
+50000000,COGS – Merchandise (stores),5.1.1,3920,
+52300000,Inventory Differences / Shrinkage,5.1.4,40,
+52500000,Vendor Rebate Income (COGS reduction),5.1.4,,240
+61000000,Salaries & Wages – Stores,6.1,1500,
+62000000,Rent & Occupancy – Stores (variable & short-term),6.2,1200,
+63600000,Bank & Payment Card Fees,6.3,162,
+79000000,Income Tax Expense – Current,8.1,554,
+,Total,,111698,111698

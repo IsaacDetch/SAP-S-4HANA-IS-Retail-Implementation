@@ -1,0 +1,151 @@
+{
+  "name": "pl_20_transform",
+  "properties": {
+    "description": "Bronze -> silver -> gold in Databricks; fail the run if blocking DQ errors or reconciliation failures exist.",
+    "parameters": {
+      "run_id": {
+        "type": "String"
+      },
+      "posting_date": {
+        "type": "String"
+      },
+      "price_valid_from": {
+        "type": "String"
+      },
+      "allow_dq_errors": {
+        "type": "Bool",
+        "defaultValue": false
+      }
+    },
+    "activities": [
+      {
+        "name": "Silver per object",
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@createArray('stores','vendors','items','onhand','trial_balance')",
+            "type": "Expression"
+          },
+          "isSequential": false,
+          "activities": [
+            {
+              "name": "Bronze to silver",
+              "type": "DatabricksNotebook",
+              "dependsOn": [],
+              "policy": {
+                "timeout": "0.04:00:00",
+                "retry": 1,
+                "retryIntervalInSeconds": 120
+              },
+              "linkedServiceName": {
+                "referenceName": "ls_databricks",
+                "type": "LinkedServiceReference"
+              },
+              "typeProperties": {
+                "notebookPath": "/Shared/migration/01_bronze_to_silver",
+                "baseParameters": {
+                  "run_id": "@pipeline().parameters.run_id",
+                  "object": "@item()"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "Silver to gold",
+        "type": "DatabricksNotebook",
+        "dependsOn": [
+          {
+            "activity": "Silver per object",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.04:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 120
+        },
+        "linkedServiceName": {
+          "referenceName": "ls_databricks",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "notebookPath": "/Shared/migration/02_silver_to_gold",
+          "baseParameters": {
+            "run_id": "@pipeline().parameters.run_id",
+            "posting_date": "@pipeline().parameters.posting_date",
+            "price_valid_from": "@pipeline().parameters.price_valid_from"
+          }
+        }
+      },
+      {
+        "name": "DQ gate",
+        "type": "IfCondition",
+        "dependsOn": [
+          {
+            "activity": "Silver to gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "expression": {
+            "value": "@or(pipeline().parameters.allow_dq_errors, and(equals(json(activity('Silver to gold').output.runOutput).recon_failed, 0), equals(json(activity('Silver to gold').output.runOutput).dq_errors, 0)))",
+            "type": "Expression"
+          },
+          "ifFalseActivities": [
+            {
+              "name": "Stop \u2013 DQ or reconciliation failed",
+              "type": "Fail",
+              "typeProperties": {
+                "message": "Data-quality errors or reconciliation failures \u2013 see etl.dq_result / etl.recon_result and the Power BI migration dashboard",
+                "errorCode": "DQ_GATE"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "log_transform",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "DQ gate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "linkedServiceName": {
+          "referenceName": "ls_sql_control",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "storedProcedureName": "etl.usp_log_step",
+          "storedProcedureParameters": {
+            "run_id": {
+              "value": "@pipeline().parameters.run_id",
+              "type": "String"
+            },
+            "step": {
+              "value": "log_transform",
+              "type": "String"
+            },
+            "status": {
+              "value": "TRANSFORMED",
+              "type": "String"
+            },
+            "pipeline_run": {
+              "value": "@pipeline().RunId",
+              "type": "String"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

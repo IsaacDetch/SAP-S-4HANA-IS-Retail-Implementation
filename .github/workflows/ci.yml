@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install
+        run: pip install -r etl/requirements.txt
+      - name: Finance worked example checks
+        run: python finance/worked_example.py --check
+      - name: ETL unit tests
+        working-directory: etl
+        run: python -m pytest -q
+      - name: Sample pipeline run (reconciliation must pass)
+        working-directory: etl
+        run: PYTHONPATH=src python -m retail_etl.pipeline --source sample_data/legacy --out /tmp/sample_output
+      - name: Generated files are up to date
+        run: |
+          python tools/build_docs.py
+          python etl/adf/generate_adf.py
+          git diff --exit-code -- docs/05-chart-of-accounts.md docs/08-finance-worked-example.md etl/adf

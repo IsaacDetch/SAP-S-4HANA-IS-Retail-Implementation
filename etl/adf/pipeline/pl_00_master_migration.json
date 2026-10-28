@@ -1,0 +1,162 @@
+{
+  "name": "pl_00_master_migration",
+  "properties": {
+    "description": "Orchestrates one migration run (mock load or cutover): extract -> transform + DQ gate -> load HANA staging. Reconciliation (pl_40) runs after the Migration Cockpit transfer.",
+    "parameters": {
+      "run_id": {
+        "type": "String",
+        "defaultValue": "MOCK1"
+      },
+      "posting_date": {
+        "type": "String",
+        "defaultValue": "2026-06-30"
+      },
+      "price_valid_from": {
+        "type": "String",
+        "defaultValue": "2026-07-01"
+      },
+      "allow_dq_errors": {
+        "type": "Bool",
+        "defaultValue": false
+      }
+    },
+    "activities": [
+      {
+        "name": "log_start",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [],
+        "linkedServiceName": {
+          "referenceName": "ls_sql_control",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "storedProcedureName": "etl.usp_log_step",
+          "storedProcedureParameters": {
+            "run_id": {
+              "value": "@pipeline().parameters.run_id",
+              "type": "String"
+            },
+            "step": {
+              "value": "log_start",
+              "type": "String"
+            },
+            "status": {
+              "value": "STARTED",
+              "type": "String"
+            },
+            "pipeline_run": {
+              "value": "@pipeline().RunId",
+              "type": "String"
+            }
+          }
+        }
+      },
+      {
+        "name": "Extract",
+        "type": "ExecutePipeline",
+        "dependsOn": [
+          {
+            "activity": "log_start",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "pl_10_extract_legacy",
+            "type": "PipelineReference"
+          },
+          "waitOnCompletion": true,
+          "parameters": {
+            "run_id": "@pipeline().parameters.run_id"
+          }
+        }
+      },
+      {
+        "name": "Transform",
+        "type": "ExecutePipeline",
+        "dependsOn": [
+          {
+            "activity": "Extract",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "pl_20_transform",
+            "type": "PipelineReference"
+          },
+          "waitOnCompletion": true,
+          "parameters": {
+            "run_id": "@pipeline().parameters.run_id",
+            "posting_date": "@pipeline().parameters.posting_date",
+            "price_valid_from": "@pipeline().parameters.price_valid_from",
+            "allow_dq_errors": "@pipeline().parameters.allow_dq_errors"
+          }
+        }
+      },
+      {
+        "name": "Load HANA staging",
+        "type": "ExecutePipeline",
+        "dependsOn": [
+          {
+            "activity": "Transform",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "pipeline": {
+            "referenceName": "pl_30_load_hana_staging",
+            "type": "PipelineReference"
+          },
+          "waitOnCompletion": true,
+          "parameters": {
+            "run_id": "@pipeline().parameters.run_id"
+          }
+        }
+      },
+      {
+        "name": "log_end",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Load HANA staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "linkedServiceName": {
+          "referenceName": "ls_sql_control",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "storedProcedureName": "etl.usp_log_step",
+          "storedProcedureParameters": {
+            "run_id": {
+              "value": "@pipeline().parameters.run_id",
+              "type": "String"
+            },
+            "step": {
+              "value": "log_end",
+              "type": "String"
+            },
+            "status": {
+              "value": "READY_FOR_MIGRATION_COCKPIT",
+              "type": "String"
+            },
+            "pipeline_run": {
+              "value": "@pipeline().RunId",
+              "type": "String"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

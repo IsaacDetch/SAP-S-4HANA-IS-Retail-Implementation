@@ -1,0 +1,14 @@
+{
+  "name": "ds_sql_control",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "ls_sql_control",
+      "type": "LinkedServiceReference"
+    },
+    "type": "AzureSqlTable",
+    "typeProperties": {
+      "schema": "etl",
+      "table": "migration_object"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "ls_databricks",
+  "properties": {
+    "type": "AzureDatabricks",
+    "typeProperties": {
+      "domain": "https://@{linkedService().workspaceUrl}",
+      "authentication": "MSI",
+      "workspaceResourceId": "@{linkedService().workspaceResourceId}",
+      "existingClusterId": "@{linkedService().clusterId}"
+    },
+    "parameters": {
+      "workspaceUrl": {
+        "type": "String"
+      },
+      "workspaceResourceId": {
+        "type": "String"
+      },
+      "clusterId": {
+        "type": "String"
+      }
+    }
+  }
+}

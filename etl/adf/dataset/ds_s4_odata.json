@@ -1,0 +1,18 @@
+{
+  "name": "ds_s4_odata",
+  "properties": {
+    "linkedServiceName": {
+      "referenceName": "ls_s4_odata",
+      "type": "LinkedServiceReference"
+    },
+    "parameters": {
+      "path": {
+        "type": "String"
+      }
+    },
+    "type": "ODataResource",
+    "typeProperties": {
+      "path": "@dataset().path"
+    }
+  }
+}

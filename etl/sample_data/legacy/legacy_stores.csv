@@ -1,0 +1,8 @@
+store_id,store_name,store_type,street,city,state,zip,country,open_date
+DC01,Distribution Center Ontario,DC,4500 Logistics Way,Ontario,CA,91761,US,2015-03-01
+WEB1,Online Store,WEB,100 Main St,Los Angeles,CA,90012,US,2019-01-15
+ST01,Store Pasadena,STORE,101 Retail Ave,Pasadena,CA,91101,US,2017-01-01
+ST02,Store Santa Monica,STORE,102 Retail Ave,Santa Monica,CA,90401,US,2018-02-01
+ST03,Store Irvine,STORE,103 Retail Ave,Irvine,CA,92618,US,2016-03-01
+ST04,Store Burbank,STORE,104 Retail Ave,Burbank,CA,91502,US,2017-04-01
+ST05,Store Long Beach,STORE,105 Retail Ave,Long Beach,CA,90802,US,2018-05-01

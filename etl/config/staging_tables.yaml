@@ -1,0 +1,48 @@
+# Gold dataset -> SAP S/4HANA Migration Cockpit staging table.
+#
+# The Migration Cockpit ("Migrate Your Data", approach "Migrate Data Using Staging Tables") generates
+# staging tables in the staging schema of the SAP HANA database when a migration project is created.
+# Their technical names (e.g. /1LT/DS...) are system-generated, so they are entered here AFTER the
+# project is created in each system (DEV / QA / PRE-PROD / PROD). Field names in the gold layer use SAP
+# technical field names; confirm them against the staging structure of your release before Mock 1.
+#
+# load_order follows the migration sequence in docs/10-data-migration-azure-etl.md.
+
+hana:
+  host_secret: hana-staging-host          # Key Vault secret names (resolved at run time)
+  port_secret: hana-staging-port
+  user_secret: hana-staging-user
+  password_secret: hana-staging-password
+  schema: "<STAGING_SCHEMA>"              # schema assigned to the migration project's staging connection
+
+objects:
+  - name: site
+    load_order: 1
+    migration_object: "Site (retail) [VERIFY object name for release]"
+    staging_table: "<GENERATED_TABLE_SITE>"
+    gold_path: gold/site
+  - name: supplier
+    load_order: 3
+    migration_object: "Supplier"
+    staging_table: "<GENERATED_TABLE_SUPPLIER_GENERAL>"
+    gold_path: gold/supplier
+  - name: article
+    load_order: 4
+    migration_object: "Article (retail) [VERIFY object name for release]"
+    staging_table: "<GENERATED_TABLE_ARTICLE_BASIC>"
+    gold_path: gold/article
+  - name: sales_price
+    load_order: 7
+    migration_object: "Condition record for pricing in sales"
+    staging_table: "<GENERATED_TABLE_PRICE_CONDITION>"
+    gold_path: gold/sales_price
+  - name: inventory_balance
+    load_order: 12
+    migration_object: "Material inventory balance"
+    staging_table: "<GENERATED_TABLE_INVENTORY_BALANCE>"
+    gold_path: gold/inventory_balance
+  - name: gl_balance
+    load_order: 14
+    migration_object: "FI – G/L account balance and open/line item"
+    staging_table: "<GENERATED_TABLE_GL_BALANCE>"
+    gold_path: gold/gl_balance

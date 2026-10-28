@@ -1,0 +1,35 @@
+object,key,rule,severity,message
+supplier,1000720,MISSING_BANK,WARNING,no bank details – payment block set until four-eyes bank verification
+supplier,1000730,DUPLICATE_TAX_ID,ERROR,tax id DE444444444 used by more than one vendor – merge before load
+supplier,1000731,DUPLICATE_TAX_ID,ERROR,tax id DE444444444 used by more than one vendor – merge before load
+article,TS-100-BLK-L,INVALID_GTIN,ERROR,UPC '012345600037' fails GS1 check digit / length
+article,DN-200-IND-30,DUPLICATE_GTIN,ERROR,UPC 012345600074 assigned to more than one variant
+article,DN-200-IND-32,DUPLICATE_GTIN,ERROR,UPC 012345600074 assigned to more than one variant
+article,AC-500-RED-OS,MC_UNMAPPED,ERROR,dept/class 90-900 has no merchandise category
+sales_price,SH-300-BLU-M,PRICE_POINT,WARNING,"34.95 does not follow price-point endings ('.99', '.00')"
+sales_price,SH-300-BLU-L,PRICE_POINT,WARNING,"34.95 does not follow price-point endings ('.99', '.00')"
+inventory_balance,DC01/012345600037,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,DC01/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,DC01/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,DC01/012345600135,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST01/012345600037,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST01/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST01/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST01/012345600135,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST02/012345600037,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST02/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST02/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST02/012345600135,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST03/012345600037,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST03/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST03/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST03/012345600135,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST04/012345600037,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST04/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST04/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST04/012345600135,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST05/012345600037,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST05/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST05/012345600074,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST05/012345600135,ARTICLE_UNKNOWN,ERROR,UPC not in article gold (rejected or missing)
+inventory_balance,ST03/012345600012,NEGATIVE_STOCK,ERROR,quantity -2.0 – correct by count before load
